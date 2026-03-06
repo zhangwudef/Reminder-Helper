@@ -18,6 +18,7 @@ const Layout = () => {
     { path: '/dashboard', label: '事件展示', icon: LayoutDashboard },
     { path: '/events/new', label: '创建事件', icon: PlusCircle },
     { path: '/calendar', label: '日历视图', icon: CalendarIcon },
+    { path: '/monitor', label: '事件监控', icon: PieChart },
     { path: '/stats', label: '数据整合', icon: PieChart },
   ];
 
@@ -60,7 +61,7 @@ const Layout = () => {
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                   isActive 
-                    ? 'bg-black text-white' 
+                    ? 'bg-sky-100 text-sky-700' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >

@@ -1,3 +1,21 @@
+export interface SourceUrl {
+  url: string;
+  title: string;
+  channel: string;
+}
+
+export interface CrawledInfo {
+  timestamp: string;
+  source: string;
+  keywords: string[];
+  content: string;
+  confidence: number;
+  processDescription?: string;
+  acquisitionTime?: string;
+  sourceUrls?: SourceUrl[];
+  keyPoints?: string[];
+}
+
 export interface Event {
   id: string;
   title: string;
@@ -12,9 +30,10 @@ export interface Event {
     frequency: 'once' | 'daily' | 'weekly' | 'monthly';
   };
   specialData?: {
-    crawledInfo?: string;
+    crawledInfo?: CrawledInfo;
     summary?: string;
   };
+  isAIGenerated?: boolean; // 标记是否为AI生成的事件
 }
 
 export interface User {

@@ -1,9 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEventStore } from '@/store/useEventStore';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const events = useEventStore((state) => state.events);
+  const deleteEvent = useEventStore((state) => state.deleteEvent);
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('确定要删除这个事件吗？')) {
+      deleteEvent(id);
+    }
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/events/edit/${id}`);
+  };
 
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-full">
@@ -33,6 +45,11 @@ const Dashboard = () => {
                     }`}>
                       {event.type === 'special' ? '智能推送' : '普通事件'}
                     </span>
+                    {event.isAIGenerated && (
+                      <span className="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">
+                        AI生成
+                      </span>
+                    )}
                     <h3 className="text-xl font-bold break-words">{event.title}</h3>
                     <span className={`px-2 py-0.5 text-xs rounded-full border ${
                       event.importance === 'high' ? 'border-red-200 text-red-700 bg-red-50' :
@@ -43,6 +60,18 @@ const Dashboard = () => {
                     </span>
                   </div>
                   <p className="text-gray-600 mb-4 break-words">{event.description}</p>
+                  
+                  {event.specialData?.crawledInfo && (
+                    <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                      <p className="text-sm font-semibold text-blue-800 mb-2">AI抓取信息</p>
+                      <div className="text-xs text-gray-700 space-y-1">
+                        <p><span className="font-medium">来源:</span> {event.specialData.crawledInfo.source}</p>
+                        <p><span className="font-medium">时间:</span> {new Date(event.specialData.crawledInfo.timestamp).toLocaleString()}</p>
+                        <p><span className="font-medium">关键词:</span> {event.specialData.crawledInfo.keywords.join(', ')}</p>
+                        <p className="mt-2"><span className="font-medium">内容:</span> {event.specialData.crawledInfo.content.substring(0, 80)}...</p>
+                      </div>
+                    </div>
+                  )}
                   
                   {event.specialData?.summary && (
                     <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
@@ -73,8 +102,8 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="mt-4 flex justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                    <button className="text-sm text-gray-600 hover:text-black">编辑</button>
-                    <button className="text-sm text-red-600 hover:text-red-800">删除</button>
+                    <button className="text-sm text-gray-600 hover:text-black" onClick={() => handleEdit(event.id)}>编辑</button>
+                    <button className="text-sm text-red-600 hover:text-red-800" onClick={() => handleDelete(event.id)}>删除</button>
                   </div>
                 </div>
               </div>
